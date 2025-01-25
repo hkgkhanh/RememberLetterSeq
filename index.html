@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/style.css">
+    <title>Memo training</title>
+</head>
+<body onload="setState('idle')">
+
+    <div class="grid-container">
+
+        <div class="grid-item" id="memo-seq-container">
+            <div class="flex-container">
+                <div class="flex-item" style="flex-grow: 1">
+                    <button id="start-memo-button" onclick="startMemo()">start memo</button><br>
+                    <button id="start-exec-button" onclick="startExec()" disabled>start exec</button>
+                </div>
+                <div class="flex-item" style="flex-grow: 8" id="memo-seq"></div>
+                <div class="flex-item" style="flex-grow: 1" id="memo-done"></div>
+            </div>
+        </div>
+
+        <div class="grid-item" id="memo-input-container">
+            <input id="input-field" type="text" disabled><br><br>
+            <button id="finish-button" onclick="finishAttempt()" disabled>Finish</button>
+        </div>
+
+        <div class="grid-item" id="timer-container">
+            <div id="timer">00:00</div>
+            <div id="memo-time"></div>
+        </div>
+
+        <div class="grid-item" id="result-container">
+            <!-- <table>
+                <tr>
+                    <td></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td><b>Correct memo:</b></td>
+                    <td>AB</td>
+                    <td>CD</td>
+                </tr>
+                <tr>
+                    <td><b>Your memo:</b></td>
+                    <td>AB</td>
+                    <td>CE</td>
+                </tr>
+            </table> -->
+        </div>
+    </div>
+
+    <script src="scripts/util.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/timer.js"></script>
+    <script src="scripts/keyevents.js"></script>
+
+</body>
+</html>
