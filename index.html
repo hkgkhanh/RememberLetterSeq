@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/style.css">
+    <script src="scripts/util.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/timer.js"></script>
+    <script src="scripts/scrambld_copy.js"></script>
+    <script src="scripts/scramble_333.js"></script>
     <title>Memo training</title>
 </head>
-<body onload="setState('idle')">
+<body onload="setState('idle'); initScrambler();">
 
     <div class="grid-container">
 
@@ -121,10 +126,8 @@
         </div>
     </div>
 
-    <script src="scripts/util.js"></script>
-    <script src="scripts/script.js"></script>
-    <script src="scripts/timer.js"></script>
     <script src="scripts/keyevents.js"></script>
-
 </body>
 </html>
+
+<!-- scramblers["333"].getRandomScramble().scramble_string.replace(/  /g, ' '); -->

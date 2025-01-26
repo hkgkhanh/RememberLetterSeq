@@ -1,7 +1,13 @@
 var state = "idle"; // idle, memo, exec, done
+var scrambles = [];
 var sequenceArray = [];
 var inputArray = [];
 var memoIndex = 1;
+
+function initScrambler() {
+    // Initialize scramble generator
+    scramblers["333"].initialize(null, Math);
+}
 
 function setState(s) {
     state = s;
@@ -28,6 +34,7 @@ function setState(s) {
         getElm("memo-time").innerHTML = "";
         getElm("result-container").innerHTML = "";
         memoIndex = 1;
+        scrambles = [];
         sequenceArray = [];
         inputArray = [];
 
@@ -71,27 +78,88 @@ function genSequence() {
     // n = getMinBetween(n, 220);
     // if (n % 2 == 1) n++; // always even
 
-    let n = getElm("input-cube-field").value * 10 * 2;
+    // let n = getElm("input-cube-field").value * 10 * 2;
+
+    // for (let i = 0; i < n; i++) {
+    //     let letter = getRandomLetter();
+    //     sequenceArray.push(letter);
+    // }
+
+    let n = getElm("input-cube-field").value;
 
     for (let i = 0; i < n; i++) {
-        let letter = getRandomLetter();
-        sequenceArray.push(letter);
+        scrambles.push(scramblers["333"].getRandomScramble().scramble_string.replace(/  /g, ' '));
+    }
+
+    for (let i = 0; i < n; i++) {
+        scrambleCube(scrambles[i]);
+        solveCube();
+        // console.log(getEdgeCycleSequence());
+        // console.log(getCornerCycleSequence());
+
+        let edgeCycleArr = getEdgeCycleSequence();
+        let cornerCycleArr = getCornerCycleSequence();
+
+        let array = edgeCycleArr.concat(cornerCycleArr);
+        // console.log(array);
+        sequenceArray.push(array);
     }
 }
 
 function displayMemoSequence() {
     getElm("memo-seq").innerHTML = "";
 
-    let maxIndex = getMinBetween(memoIndex, sequenceArray.length);
+    let slashCount = 0;
+    let prevIsLetter = false;
+    let tempSeqArr = [];
+    for (let i = 0; i < sequenceArray.length; i++) {
+        for (let j = 0; j < sequenceArray[i].length; j++) {
+            tempSeqArr.push(sequenceArray[i][j]);
+        }
+    }
 
-    if (memoIndex >= sequenceArray.length) {
+    let maxIndex = getMinBetween(memoIndex, tempSeqArr.length);
+
+    if (memoIndex >= tempSeqArr.length) {
         getElm("memo-done").innerHTML = "memo done!";
     }
 
-    for (let i = 0; i < maxIndex; i++) {
-        getElm("memo-seq").innerHTML += sequenceArray[i] + " ";
+    // for (let i = 0; i < maxIndex; i++) {
+    //     if (i % 2 == 0) getElm("memo-seq").innerHTML += sequenceArray[i];
+    //     else getElm("memo-seq").innerHTML += sequenceArray[i] + " ";
         
-        if ((i + 1) % 20 == 0) getElm("memo-seq").innerHTML += "<br>";
+    //     if ((i + 1) % 20 == 0) getElm("memo-seq").innerHTML += "<br>";
+    // }
+
+    for (let i = 0; i < maxIndex; i++) {
+        if (tempSeqArr[i] != '/') {
+            if (prevIsLetter == false) {
+                getElm("memo-seq").innerHTML += " " + tempSeqArr[i];
+                prevIsLetter = true;
+            } else {
+                getElm("memo-seq").innerHTML += tempSeqArr[i];
+                prevIsLetter = false;
+            }
+        } else {
+            getElm("memo-seq").innerHTML += " / ";
+            prevIsLetter = false;
+            slashCount++;
+
+            if (slashCount != 0 && slashCount % 2 == 0) {
+                getElm("memo-seq").innerHTML += "<br>";
+            }
+        }
+
+        if (i == maxIndex - 1) {
+            if (tempSeqArr[i + 1] == '/') {
+                getElm("memo-seq").innerHTML += " / ";
+                memoIndex++;
+
+                if (memoIndex >= tempSeqArr.length) {
+                    getElm("memo-done").innerHTML = "memo done!";
+                }
+            }
+        }
     }
 
     getElm("memo-seq").scrollTop = getElm("memo-seq").scrollHeight;
