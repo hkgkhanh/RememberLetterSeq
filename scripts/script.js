@@ -15,6 +15,7 @@ function setState(s) {
         getElm("timer").innerHTML = "00:00";
         getElm("memo-time").innerHTML = "";
         getElm("result-container").innerHTML = "";
+        getElm("input-cube-field").value = 10;
 
     } else if (s == "memo") {
         getElm("start-memo-button").disabled = true;
@@ -66,9 +67,11 @@ function startMemo() {
 }
 
 function genSequence() {
-    let n = getRandomInteger(210, 230);
-    n = getMinBetween(n, 220);
-    if (n % 2 == 1) n++; // always even
+    // let n = getRandomInteger(210, 230);
+    // n = getMinBetween(n, 220);
+    // if (n % 2 == 1) n++; // always even
+
+    let n = getElm("input-cube-field").value * 10 * 2;
 
     for (let i = 0; i < n; i++) {
         let letter = getRandomLetter();
@@ -87,7 +90,11 @@ function displayMemoSequence() {
 
     for (let i = 0; i < maxIndex; i++) {
         getElm("memo-seq").innerHTML += sequenceArray[i] + " ";
+        
+        if ((i + 1) % 20 == 0) getElm("memo-seq").innerHTML += "<br>";
     }
+
+    getElm("memo-seq").scrollTop = getElm("memo-seq").scrollHeight;
 }
 
 function startExec() {
@@ -109,8 +116,18 @@ function finishAttempt() {
     let count = 0;
     let table = document.createElement("table");
 
-    let indexRow = document.createElement('tr');
+    let cubeIndexRow = document.createElement('tr');
     let emptyCell = document.createElement('td');
+    cubeIndexRow.appendChild(emptyCell);
+
+    for (let i = 0; i < n; i += 2) {
+        let cell = document.createElement('td');
+        cell.textContent = (i % 20 == 0) ? Math.round(i / 20 + 1) : "";
+        cubeIndexRow.appendChild(cell);
+    }
+
+    let indexRow = document.createElement('tr');
+    emptyCell = document.createElement('td');
     indexRow.appendChild(emptyCell);
 
     for (let i = 0; i < n; i += 2) {
@@ -156,6 +173,7 @@ function finishAttempt() {
         }
     }
 
+    table.appendChild(cubeIndexRow);
     table.appendChild(indexRow);
     table.appendChild(correctSequenceRow);
     table.appendChild(yourSequenceRow);
