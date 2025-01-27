@@ -1,6 +1,8 @@
 var state = "idle"; // idle, memo, exec, done
 var scrambles = [];
 var sequenceArray = [];
+var currentCubeInput = 0;
+var tempInputArray = [];
 var inputArray = [];
 var memoIndex = 1;
 
@@ -16,6 +18,7 @@ function setState(s) {
         getElm("start-exec-button").disabled = true;
         getElm("input-field").disabled = true;
         getElm("finish-button").disabled = true;
+        getElm("next-cube-button").disabled = true;
         getElm("memo-seq").innerHTML = "";
         getElm("memo-done").innerHTML = "";
         getElm("timer").innerHTML = "00:00";
@@ -28,6 +31,7 @@ function setState(s) {
         getElm("start-exec-button").disabled = false;
         getElm("input-field").disabled = true;
         getElm("finish-button").disabled = true;
+        getElm("next-cube-button").disabled = true;
         getElm("memo-seq").innerHTML = "";
         getElm("memo-done").innerHTML = "";
         getElm("timer").innerHTML = "00:00";
@@ -36,6 +40,8 @@ function setState(s) {
         memoIndex = 1;
         scrambles = [];
         sequenceArray = [];
+        currentCubeInput = 0;
+        tempInputArray = [];
         inputArray = [];
 
     } else if (s == "exec") {
@@ -43,6 +49,7 @@ function setState(s) {
         getElm("start-exec-button").disabled = true;
         getElm("input-field").disabled = false;
         getElm("finish-button").disabled = false;
+        getElm("next-cube-button").disabled = false;
         getElm("memo-seq").innerHTML = "";
         getElm("memo-done").innerHTML = "memo done!";
         // getElm("timer").innerHTML = "";
@@ -54,6 +61,7 @@ function setState(s) {
         getElm("start-exec-button").disabled = true;
         getElm("input-field").disabled = true;
         getElm("finish-button").disabled = true;
+        getElm("next-cube-button").disabled = true;
         getElm("memo-seq").innerHTML = "";
         getElm("memo-done").innerHTML = "memo done!";
         // getElm("timer").innerHTML = "";
@@ -180,70 +188,119 @@ function finishAttempt() {
     setState("done");
     clearInterval(timerUpdate);
 
-    let n = getMaxBetween(sequenceArray.length, inputArray.length);
-    let count = 0;
-    let table = document.createElement("table");
+    inputArray.push(tempInputArray);
+    tempInputArray = [];
+    currentCubeInput++;
 
-    let cubeIndexRow = document.createElement('tr');
-    let emptyCell = document.createElement('td');
-    cubeIndexRow.appendChild(emptyCell);
+    for (let m = 0; m < sequenceArray.length; m++) {
 
-    for (let i = 0; i < n; i += 2) {
-        let cell = document.createElement('td');
-        cell.textContent = (i % 20 == 0) ? Math.round(i / 20 + 1) : "";
-        cubeIndexRow.appendChild(cell);
-    }
-
-    let indexRow = document.createElement('tr');
-    emptyCell = document.createElement('td');
-    indexRow.appendChild(emptyCell);
-
-    for (let i = 0; i < n; i += 2) {
-        let cell = document.createElement('td');
-        cell.textContent = (++count);
-        indexRow.appendChild(cell);
-    }
-
-    let correctSequenceRow = document.createElement('tr');
-    let correctCell = document.createElement('td');
-    correctCell.classList.add("bold");
-    correctCell.textContent = "Correct memo:";
-    correctSequenceRow.appendChild(correctCell);
-
-    for (let i = 0; i < n; i += 2) {
-        let cell = document.createElement('td');
-        let content = sequenceArray[i] + sequenceArray[i + 1];
-        cell.textContent = sequenceArray[i] == undefined ? "-" : content;
-        correctSequenceRow.appendChild(cell);
-    }
-
-    let incorrectFound = false;
-
-    let yourSequenceRow = document.createElement('tr');
-    let yourCell = document.createElement('td');
-    yourCell.classList.add("bold");
-    yourCell.textContent = "Your memo:";
-    yourSequenceRow.appendChild(yourCell);
-
-    for (let i = 0; i < n; i += 2) {
-        let cell = document.createElement('td');
-        let content = inputArray[i] + inputArray[i + 1];
-        cell.textContent = inputArray[i] == undefined ? "-" : content;
-        yourSequenceRow.appendChild(cell);
-
-        let correctContent = sequenceArray[i] + sequenceArray[i + 1];
-        if (content !== correctContent) {
-            incorrectFound = true;
+        let pairedArray = [];
+        let splitPoint = 0;
+        let  pair = "";
+        for (let i = 0; i < sequenceArray[m].length; i++) {
+            if (pair == "") {
+                if (sequenceArray[m][i] != "/") pair += sequenceArray[m][i];
+                else {
+                    if (i != sequenceArray[m].length - 1) {
+                        splitPoint = pairedArray.length - 1;
+                        console.log(splitPoint);
+                    }
+                    console.log(pairedArray);
+                }
+            } else {
+                if (sequenceArray[m][i] != "/") {
+                    pair += sequenceArray[m][i];
+                    pairedArray.push(pair);
+                    pair = "";
+                    console.log(pairedArray);
+                } else {
+                    pairedArray.push(pair);
+                    pair = "";
+                    if (i != sequenceArray[m].length - 1) {
+                        splitPoint = pairedArray.length - 1;
+                        console.log(splitPoint);
+                    }
+                    console.log(pairedArray);
+                }
+            }
         }
 
-        if (incorrectFound) {
-            cell.classList.add("bg-red");
-        }
-    }
+        let n = getMaxBetween(pairedArray.length, inputArray[m].length);
+        let count = 0;
+        let table = document.createElement("table");
 
-    table.appendChild(cubeIndexRow);
-    table.appendChild(indexRow);
-    table.appendChild(correctSequenceRow);
-    table.appendChild(yourSequenceRow);
-    getElm("result-container").appendChild(table);
+        let indexRow = document.createElement('tr');
+        emptyCell = document.createElement('td');
+        emptyCell.classList.add("bold");
+        emptyCell.textContent = "Cube " + (m + 1);
+        indexRow.appendChild(emptyCell);
+
+        for (let i = 0; i < n; i++) {
+            let cell = document.createElement('td');
+            cell.textContent = (++count);
+            indexRow.appendChild(cell);
+        }
+
+        let correctSequenceRow = document.createElement('tr');
+        let correctCell = document.createElement('td');
+        correctCell.classList.add("bold");
+        correctCell.textContent = "Correct memo:";
+        correctSequenceRow.appendChild(correctCell);
+
+        for (let i = 0; i < n; i++) {
+            let cell = document.createElement('td');
+            let content = pairedArray[i];
+            cell.textContent = pairedArray[i] == undefined ? "-" : content;
+
+            if (i == splitPoint) {
+                cell.style.borderRight = "1px solid #000";
+            }
+
+            correctSequenceRow.appendChild(cell);
+        }
+
+        let incorrectFound = false;
+
+        let yourSequenceRow = document.createElement('tr');
+        let yourCell = document.createElement('td');
+        yourCell.classList.add("bold");
+        yourCell.textContent = "Your memo:";
+        yourSequenceRow.appendChild(yourCell);
+
+        for (let i = 0; i < n; i++) {
+            let cell = document.createElement('td');
+            let content = inputArray[m][i];
+            cell.textContent = inputArray[m][i] == undefined ? "-" : content;
+
+            if (i == splitPoint) {
+                cell.style.borderRight = "1px solid #000";
+            }
+
+            yourSequenceRow.appendChild(cell);
+
+            let correctContent = pairedArray[i];
+            if (content !== correctContent) {
+                incorrectFound = true;
+            }
+
+            if (incorrectFound) {
+                cell.classList.add("bg-red");
+            }
+        }
+
+        table.appendChild(indexRow);
+        table.appendChild(correctSequenceRow);
+        table.appendChild(yourSequenceRow);
+        getElm("result-container").appendChild(table);
+        table.style.border = "1px solid #000";
+        table.style.borderCollapse = "collapse";
+    }
+}
+
+function toNextCube() {
+    inputArray.push(tempInputArray);
+    tempInputArray = [];
+    currentCubeInput++;
+
+    if (currentCubeInput >= getElm("input-cube-field").value - 1) getElm("next-cube-button").disabled = true;
 }

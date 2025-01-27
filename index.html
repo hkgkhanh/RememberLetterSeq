@@ -29,6 +29,7 @@
 
         <div class="grid-item" id="memo-input-container">
             <input id="input-field" type="text" disabled><br><br>
+            <button id="next-cube-button" onclick="toNextCube()" disabled>Next cube</button>
             <button id="finish-button" onclick="finishAttempt()" disabled>Finish</button>
         </div>
 
@@ -37,93 +38,7 @@
             <div id="memo-time"></div>
         </div>
 
-        <div class="grid-item" id="result-container">
-            <!-- <table>
-                <tr>
-                    <td></td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                </tr>
-                <tr>
-                    <td><b>Correct memo:</b></td>
-                    <td>AB</td>
-                    <td>CD</td>
-                </tr>
-                <tr>
-                    <td><b>Your memo:</b></td>
-                    <td>AB</td>
-                    <td>CE</td>
-                </tr>
-            </table> -->
-        </div>
+        <div class="grid-item" id="result-container"></div>
     </div>
 
     <script src="scripts/keyevents.js"></script>

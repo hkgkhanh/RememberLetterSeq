@@ -8,8 +8,11 @@ document.addEventListener('keydown', function(event) {
             let input = getElm("input-field").value;
 
             if (input.length >= 2) {
-                inputArray.push(input[0]);
-                inputArray.push(input[1]);
+                if (input[1] != "/") {
+                    tempInputArray.push(input[0] + "" + input[1]);
+                } else {
+                    tempInputArray.push(input[0] + "");
+                }
                 getElm("input-field").value = "";
             }
         }
