@@ -88,8 +88,16 @@ html, body {
     font-weight: bold;
 }
 
+.bg-green {
+    background-color: #6aea64;
+}
+
 .bg-red {
     background-color: #ff3333;
+}
+
+.hoverable:hover {
+    cursor: pointer;
 }
 
 #input-cube-field {

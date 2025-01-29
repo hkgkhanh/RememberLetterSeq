@@ -52,8 +52,6 @@ function setState(s) {
         getElm("next-cube-button").disabled = false;
         getElm("memo-seq").innerHTML = "";
         getElm("memo-done").innerHTML = "memo done!";
-        // getElm("timer").innerHTML = "";
-        // getElm("memo-time").innerHTML = "";
         getElm("result-container").innerHTML = "";
 
     } else if (s == "done") {
@@ -64,8 +62,6 @@ function setState(s) {
         getElm("next-cube-button").disabled = true;
         getElm("memo-seq").innerHTML = "";
         getElm("memo-done").innerHTML = "memo done!";
-        // getElm("timer").innerHTML = "";
-        // getElm("memo-time").innerHTML = "";
         getElm("result-container").innerHTML = "";
     }
 }
@@ -82,17 +78,6 @@ function startMemo() {
 }
 
 function genSequence() {
-    // let n = getRandomInteger(210, 230);
-    // n = getMinBetween(n, 220);
-    // if (n % 2 == 1) n++; // always even
-
-    // let n = getElm("input-cube-field").value * 10 * 2;
-
-    // for (let i = 0; i < n; i++) {
-    //     let letter = getRandomLetter();
-    //     sequenceArray.push(letter);
-    // }
-
     let n = getElm("input-cube-field").value;
 
     for (let i = 0; i < n; i++) {
@@ -102,14 +87,11 @@ function genSequence() {
     for (let i = 0; i < n; i++) {
         scrambleCube(scrambles[i]);
         solveCube();
-        // console.log(getEdgeCycleSequence());
-        // console.log(getCornerCycleSequence());
 
         let edgeCycleArr = getEdgeCycleSequence();
         let cornerCycleArr = getCornerCycleSequence();
 
         let array = edgeCycleArr.concat(cornerCycleArr);
-        // console.log(array);
         sequenceArray.push(array);
     }
 }
@@ -131,13 +113,6 @@ function displayMemoSequence() {
     if (memoIndex >= tempSeqArr.length) {
         getElm("memo-done").innerHTML = "memo done!";
     }
-
-    // for (let i = 0; i < maxIndex; i++) {
-    //     if (i % 2 == 0) getElm("memo-seq").innerHTML += sequenceArray[i];
-    //     else getElm("memo-seq").innerHTML += sequenceArray[i] + " ";
-        
-    //     if ((i + 1) % 20 == 0) getElm("memo-seq").innerHTML += "<br>";
-    // }
 
     for (let i = 0; i < maxIndex; i++) {
         if (tempSeqArr[i] != '/') {
@@ -192,6 +167,8 @@ function finishAttempt() {
     tempInputArray = [];
     currentCubeInput++;
 
+    let successCount = 0;
+
     for (let m = 0; m < sequenceArray.length; m++) {
 
         let pairedArray = [];
@@ -203,24 +180,19 @@ function finishAttempt() {
                 else {
                     if (i != sequenceArray[m].length - 1) {
                         splitPoint = pairedArray.length - 1;
-                        console.log(splitPoint);
                     }
-                    console.log(pairedArray);
                 }
             } else {
                 if (sequenceArray[m][i] != "/") {
                     pair += sequenceArray[m][i];
                     pairedArray.push(pair);
                     pair = "";
-                    console.log(pairedArray);
                 } else {
                     pairedArray.push(pair);
                     pair = "";
                     if (i != sequenceArray[m].length - 1) {
                         splitPoint = pairedArray.length - 1;
-                        console.log(splitPoint);
                     }
-                    console.log(pairedArray);
                 }
             }
         }
@@ -232,7 +204,13 @@ function finishAttempt() {
         let indexRow = document.createElement('tr');
         emptyCell = document.createElement('td');
         emptyCell.classList.add("bold");
+        emptyCell.classList.add("hoverable");
         emptyCell.textContent = "Cube " + (m + 1);
+
+        emptyCell.addEventListener("click", function (e) {
+            confirm(scrambles[m]);
+        });
+
         indexRow.appendChild(emptyCell);
 
         for (let i = 0; i < n; i++) {
@@ -271,6 +249,7 @@ function finishAttempt() {
             let cell = document.createElement('td');
             let content = inputArray[m][i];
             cell.textContent = inputArray[m][i] == undefined ? "-" : content;
+            cell.classList.add("bg-green");
 
             if (i == splitPoint) {
                 cell.style.borderRight = "1px solid #000";
@@ -284,9 +263,12 @@ function finishAttempt() {
             }
 
             if (incorrectFound) {
+                cell.classList.remove("bg-green");
                 cell.classList.add("bg-red");
             }
         }
+
+        if (incorrectFound == false) successCount++;
 
         table.appendChild(indexRow);
         table.appendChild(correctSequenceRow);
@@ -295,6 +277,14 @@ function finishAttempt() {
         table.style.border = "1px solid #000";
         table.style.borderCollapse = "collapse";
     }
+
+    let scrambleShowNode = document.createElement("p");
+    scrambleShowNode.textContent = "Click on 'Cube X' to see the scramble";
+    getElm("result-container").insertBefore(scrambleShowNode, getElm("result-container").children[0]);
+
+    let successRateNode = document.createElement("p");
+    successRateNode.textContent = "Result: " + successCount + "/" + sequenceArray.length;
+    getElm("result-container").insertBefore(successRateNode, getElm("result-container").children[0]);
 }
 
 function toNextCube() {
