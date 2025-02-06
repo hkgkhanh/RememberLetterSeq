@@ -24,6 +24,7 @@ function setState(s) {
         getElm("timer").innerHTML = "00:00";
         getElm("memo-time").innerHTML = "";
         getElm("result-container").innerHTML = "";
+        getElm("cube-number").innerHTML = "";
         getElm("input-cube-field").value = 10;
 
     } else if (s == "memo") {
@@ -52,6 +53,7 @@ function setState(s) {
         getElm("next-cube-button").disabled = false;
         getElm("memo-seq").innerHTML = "";
         getElm("memo-done").innerHTML = "memo done!";
+        getElm("cube-number").innerHTML = "cube " + (currentCubeInput + 1);
         getElm("result-container").innerHTML = "";
 
     } else if (s == "done") {
@@ -62,6 +64,7 @@ function setState(s) {
         getElm("next-cube-button").disabled = true;
         getElm("memo-seq").innerHTML = "";
         getElm("memo-done").innerHTML = "memo done!";
+        getElm("cube-number").innerHTML = "";
         getElm("result-container").innerHTML = "";
     }
 }
@@ -291,6 +294,8 @@ function toNextCube() {
     inputArray.push(tempInputArray);
     tempInputArray = [];
     currentCubeInput++;
+
+    getElm("cube-number").innerHTML = "cube " + (currentCubeInput + 1);
 
     if (currentCubeInput >= getElm("input-cube-field").value - 1) getElm("next-cube-button").disabled = true;
 }
